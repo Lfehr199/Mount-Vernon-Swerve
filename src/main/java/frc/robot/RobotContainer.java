@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -13,6 +14,9 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -31,6 +35,7 @@ import frc.robot.subsystems.swervedrive.Roller;
  */
 public class RobotContainer
 {
+  private final SendableChooser<Command> autoChooser;
 public final Roller m_Roller = new Roller();
   // Replace with CommandPS4Controller or CommandJoystick if needed
   final         CommandXboxController driverXbox = new CommandXboxController(0);
@@ -91,8 +96,11 @@ public final Roller m_Roller = new Roller();
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
-  public RobotContainer()
-  {
+  public RobotContainer(){
+  autoChooser = AutoBuilder.buildAutoChooser("Simple Auto");
+
+// Publish the autoChooser to the default dashboard
+SmartDashboard.putData("Auto Selector", autoChooser);
     NamedCommands.registerCommand("roller",m_Roller.toggleState());
     // Configure the trigger bindings
     configureBindings();
@@ -176,7 +184,11 @@ public final Roller m_Roller = new Roller();
     }
 
   }
-
+  public void configurePathPlanner(){
+    drivebase.setupPathPlanner();
+    NamedCommands.registerCommand("roller",m_Roller.toggleState());
+    }
+  
  
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -186,7 +198,7 @@ public final Roller m_Roller = new Roller();
   public Command getAutonomousCommand()
   {
     // An example command will be run in autonomous
-    return drivebase.getAutonomousCommand("New Auto");
+    return autoChooser.getSelected();
   }
 
   public void setMotorBrake(boolean brake)
