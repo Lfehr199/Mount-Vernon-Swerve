@@ -44,7 +44,7 @@ public class Roller extends SubsystemBase {
     boolean run =false;
    
     public Roller() {
-    motor = new SparkMax(18, MotorType.kBrushless);
+    motor = new SparkMax(20, MotorType.kBrushed);
     closedLoopController = motor.getClosedLoopController();
     encoder = motor.getEncoder();
     
@@ -101,9 +101,6 @@ public class Roller extends SubsystemBase {
     }
     public double getCurrentVelocity() {
         return encoder.getVelocity();
-    }
-    public void intakein() {
-        motor.set(-1);
     }
     public void intake_out(){
         motor.set(.5);

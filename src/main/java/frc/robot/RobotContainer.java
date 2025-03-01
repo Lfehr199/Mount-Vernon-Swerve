@@ -97,7 +97,7 @@ public final Roller m_Roller = new Roller();
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer(){
-  autoChooser = AutoBuilder.buildAutoChooser("Simple Auto");
+  autoChooser = AutoBuilder.buildAutoChooser("1 piece center");
 
 // Publish the autoChooser to the default dashboard
 SmartDashboard.putData("Auto Selector", autoChooser);
